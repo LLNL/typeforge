@@ -36,3 +36,11 @@ typeforge_CXXFLAGS= \
   -g -Wall -O3 -march=native -ftree-vectorize \
   -rdynamic
 
+tf-version: typeforge
+	./typeforge --version
+
+tf-help: typeforge
+	./typeforge --help
+
+check-local: tf-version tf-help
+
