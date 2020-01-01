@@ -35,32 +35,34 @@ std::vector<std::string> parse_args(int argc, char* argv[]) {
 #endif
 
   po::options_description all_desc("Supported Options");
-  po::options_description desc("Supported Options");
+  po::options_description desc("Main Options");
+  po::options_description extra_desc("Extra Options");
   po::options_description hidden_desc("Hidden Options");
 
   desc.add_options()
     ("help,h", "Produce this help message.")
     ("version,v", "Display the version of Typeforge.")
     ("compile", "Run back end compiler.")
-    //("annotate", "annotate implicit casts as comments.")
+    ("plugin", po::value<vector<string> >(),"Name of Typeforge plugin files.")
+    ("source-file", po::value<vector<string> >(),"Name of source files.")
+    ("typeforge-out", po::value< string >(),"File to store output inside of JSON.")
+    ;
+
+  extra_desc.add_options()
+    ("spec-file", po::value<vector<string> >(),"Name of Typeforge specification file.")
+    ("csv-stats-file", po::value< string >(),"Generate file [args] with transformation statistics.")
+    ("opnet", "[Experimental] Operand Network will eventually replace TypeChain. Generate GraphViz representations of the OpNet as it get simplified.")
+    ("stats", "Print statistics on performed changes to the program.")
     ("explicit", "Make all implicit casts explicit.")
     ("cast-stats", "Print statistics on casts of built-in floating point types.")
-    ("trace", "Print program transformation operations as they are performed.")
-    ("plugin", po::value<vector<string> >(),"Name of Typeforge plugin files.")
-    //    ("dot-type-graph", "generate typegraph in dot file 'typegraph.dot'.")
-    ("csv-stats-file", po::value< string >(),"Generate file [args] with transformation statistics.")
-    ("typeforge-out", po::value< string >(),"File to store output inside of JSON.")
-    ("stats", "Print statistics on performed changes to the program.")
+    ("typechain-graphviz", "Generate the Typechain in GraphViz format then quit.")
     ;
 
   hidden_desc.add_options()
-    ("source-file", po::value<vector<string> >(),"Name of source files.")
-    ("set-analysis", "Perform set analysis to determine which variables must be changed together.")
-    ("opnet", "Extract the Operand Network.")
-    ("spec-file", po::value<vector<string> >(),"Name of Typeforge specification file.")
+    ("trace", "Print program transformation operations as they are performed.")
     ;
 
-  all_desc.add(desc).add(hidden_desc);
+  all_desc.add(desc).add(extra_desc).add(hidden_desc);
 
   po::positional_options_description pos;
   pos.add("source-file", -1);

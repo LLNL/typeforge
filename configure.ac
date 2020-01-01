@@ -12,4 +12,4 @@ AM_INIT_AUTOMAKE
 LT_INIT
 AC_CONFIG_SRCDIR([src/typeforge.cpp])
 
-AC_OUTPUT(Makefile include/Typeforge/Makefile include/Typeforge/OpNet/Makefile include/nlohmann/Makefile lib/Makefile lib/OpNet/Makefile src/Makefile docs/Makefile)
+AC_OUTPUT(Makefile include/Typeforge/Makefile include/Typeforge/OpNet/Makefile include/nlohmann/Makefile lib/Makefile lib/OpNet/Makefile src/Makefile tests/Makefile docs/Makefile)

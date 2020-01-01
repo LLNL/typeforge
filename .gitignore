@@ -1,13 +1,15 @@
 /autom4te.cache
 /configure
+/aclocal.m4
 /Makefile.in
-/src/Makefile.in
-/lib/Makefile.in
-/lib/OpNet/Makefile.in
 /include/nlohmann/Makefile.in
 /include/Typeforge/Makefile.in
 /include/Typeforge/OpNet/Makefile.in
-/aclocal.m4
+/lib/Makefile.in
+/lib/OpNet/Makefile.in
+/src/Makefile.in
+/tests/Makefile.in
+/docs/Makefile.in
 /config/compile
 /config/config.guess
 /config/config.sub
@@ -20,4 +22,3 @@
 /config/ltsugar.m4
 /config/ltversion.m4
 /config/lt~obsolete.m4
-/docs/Makefile.in

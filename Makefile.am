@@ -4,5 +4,5 @@ AUTOMAKE_OPTIONS = foreign
 docs:
 	make -C docs docs
 
-SUBDIRS=include/Typeforge lib src docs
+SUBDIRS=include/Typeforge lib src tests docs
 
