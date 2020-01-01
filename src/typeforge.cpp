@@ -108,9 +108,12 @@ int main (int argc, char* argv[]) {
   // Build ROSE IR and use it to initialize Typeforge
 
   ::Typeforge::typechain.initialize(frontend(rose_args));
-  if (args.isUserProvided("set-analysis")) {
-    ::Typeforge::typechain.toDot("set_analysis.dot", nullptr);
-    ::Typeforge::typechain.toDot("set_analysis_double.dot", SageBuilder::buildDoubleType());
+
+  // [ALTERNATIVE] "--typechain-graphviz"
+  if (args.isUserProvided("typechain-graphviz")) {
+    ::Typeforge::typechain.toDot("typechain.dot", nullptr);
+    ::Typeforge::typechain.toDot("typechain_double.dot", SageBuilder::buildDoubleType());
+    return 0;
   }
 
   // Transformation Objects => TODO should be only one
