@@ -5,14 +5,21 @@ Typeforge is a tool for type refactoring in C/C++ programs. It enables users to 
 
 # Getting Started
 
+Typeforge uses [ROSE Compiler](http://rosecompiler.org/).
+The following instructions assume that [ROSE is installed](https://github.com/rose-compiler/rose/wiki/How-to-Set-Up-ROSE) and the `rose-config` tool is on your path.
+
+You can then follow these instructions to install Typeforge:
 ```
 git clone https://github.com/LLNL/typeforge.git
 cd typeforge
-./configure
+./build
+mkdir build_tree
+cd build_tree
+../configure
 make -j8
 sudo make install
 ```
-More information coming soon.
+If you do not have administrative priviledge, add `--prefix=/path/to/install/typeforge` to the `configure` command.
 
 # Getting Involved & Contributing
 
@@ -29,7 +36,14 @@ Pull requests must be made toward the `develop` branch from a feature/issue bran
 
 We will provide additional guidelines soon.
 
-# Publication
+# Authors
+
+Typeforge was developed at LLNL by:
+ * Markus Schordan
+ * Tristan Vanderbruggen
+ * Nathan Pinnow
+
+# Publications
 
 Typeforge is used by research projects aimed at changing how C/C++ types are used in existing applications.
 
