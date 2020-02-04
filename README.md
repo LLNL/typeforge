@@ -1,7 +1,7 @@
 Typeforge
 =========
 
-Typeforge is a tool for type refactoring in C/C++ programs. It enables users to transform the type of any variables or operations. It guarantees the syntactic and semantic correctness of the generated code -- it will always compile!
+Typeforge is a tool for type refactoring of C/C++ programs. It enables users to change the type of any variable and determines all necessary additional (i.e. type-dependent) changes automatically. It guarantees the syntactic and semantic correctness of the generated code. Generated code will always compile.
 
 # Getting Started
 
