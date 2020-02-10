@@ -37,4 +37,3 @@ libTypeforge_cast_la_CXXFLAGS=$(config_CXXFLAGS)
 libTypeforge_utils_la_SOURCES= \
   CppStdUtilities.cpp
 libTypeforge_utils_la_CXXFLAGS=$(config_CXXFLAGS)
-

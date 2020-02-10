@@ -4,7 +4,7 @@
 AC_PREREQ([2.69])
 AC_INIT(typeforge, 1.0.0, vanderbrugge1@llnl.gov)
 AC_CONFIG_AUX_DIR(config)
-AC_CONFIG_MACRO_DIRS([config])
+AC_CONFIG_MACRO_DIR([config])
 
 CONFIGURE_ROSE_COMPILER # Must occur before LT_INIT to prevent premature call to AC_PROG_CXX
 
