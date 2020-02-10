@@ -147,7 +147,7 @@ std::set<OperandData<ok> *> OperandNetwork::collectNodes() const {
 
     assert(it != node_to_data.end());
     assert(it->second != nullptr);
-    assert(it->second->opkind == ok);
+    //assert(it->second->opkind == ok); fix this gcc 7.4 warning: invalid use of incomplete type
 
     res.insert((OperandData<ok> *)it->second);
   }

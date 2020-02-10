@@ -15,7 +15,6 @@
 
 #include "Sawyer/Graph.h"
 
-#include "Typeforge/CommandLineOptions.hpp"
 #include "Typeforge/TFTypeTransformer.hpp"
 #include "Typeforge/SpecFrontEnd.hpp"
 #include "Typeforge/Analysis.hpp"
@@ -27,6 +26,8 @@
 #include "Typeforge/OpNet/OperandNetwork.hpp"
 #include "Typeforge/OpNet/CollapseRules.hpp"
 #include "Typeforge/OpNet/OperandData.hpp" // needed to instantiate ::Typeforge::OperandNetwork::collapse
+
+#include "CommandLineOptions.hpp"
 
 #include <iostream>
 #include <fstream>

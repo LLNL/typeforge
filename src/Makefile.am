@@ -24,7 +24,8 @@ TF_OPNET_LIB=$(abs_top_builddir)/lib/OpNet/libTypeforge-opnet.la
 $(TF_OPNET_LIB):
 	$(MAKE) -C $(abs_top_builddir)/lib/OpNet libTypeforge-opnet.la
 
-typeforge_SOURCES=typeforge.cpp
+typeforge_SOURCES=typeforge.cpp CommandLineOptions.cpp
+
 typeforge_LDADD= \
   $(TF_LIB) \
   $(TF_OPNET_LIB) \
@@ -40,7 +41,7 @@ chktf-version: typeforge
 	./typeforge --version
 
 chktf-help: typeforge
-	./typeforge --help
+	./typeforge --help > /dev/null
 
 check-local: chktf-version chktf-help
 

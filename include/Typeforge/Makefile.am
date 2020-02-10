@@ -6,7 +6,6 @@ Typeforge_includedir=$(prefix)/include/Typeforge
 Typeforge_include_HEADERS= \
   Analysis.hpp \
   CastStats.hpp \
-  CommandLineOptions.hpp \
   CommandList.hpp \
   CppStdUtilities.hpp \
   SpecFrontEnd.hpp \
@@ -15,4 +14,3 @@ Typeforge_include_HEADERS= \
   ToolConfig.hpp \
   TypeforgeException.hpp \
   commons.hpp
-

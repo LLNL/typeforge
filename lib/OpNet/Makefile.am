@@ -16,5 +16,5 @@ libTypeforge_opnet_la_SOURCES= \
 libTypeforge_opnet_la_CXXFLAGS= \
   -I$(abs_top_srcdir)/include \
   -g -Wall -O3 -march=native -ftree-vectorize \
-  -rdynamic
+  -rdynamic -Wno-misleading-indentation -Wunused-variable
 

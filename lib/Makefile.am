@@ -8,7 +8,8 @@ SUBDIRS=OpNet
 config_CXXFLAGS= \
   -I$(abs_top_srcdir)/include \
   -g -Wall -O3 -march=native -ftree-vectorize \
-  -rdynamic -Wno-misleading-indentation
+  -rdynamic -Wno-misleading-indentation \
+  -Wno-unused-variable -Wno-unused-but-set-variable
 
 lib_LTLIBRARIES= \
   libTypeforge.la \
@@ -34,7 +35,6 @@ libTypeforge_cast_la_SOURCES= \
 libTypeforge_cast_la_CXXFLAGS=$(config_CXXFLAGS)
 
 libTypeforge_utils_la_SOURCES= \
-  CommandLineOptions.cpp \
   CppStdUtilities.cpp
 libTypeforge_utils_la_CXXFLAGS=$(config_CXXFLAGS)
 

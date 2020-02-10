@@ -7,8 +7,8 @@
 
 #include "sage3basic.h"
 
-#include "Typeforge/CommandLineOptions.hpp"
 #include "Typeforge/TypeforgeException.hpp"
+#include "CommandLineOptions.hpp"
 
 #include <sstream>
 #include <iostream>
