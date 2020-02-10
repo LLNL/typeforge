@@ -94,7 +94,7 @@ class Analysis {
 
     // Generate the graph of the model
 
-    void toDot(std::string const & fileName, SgType * base = nullptr) const;
+  void toDot(std::string const & fileName, SgType * base, bool detailed=true) const;
 
   friend ::Typeforge::ToolConfig;
 };

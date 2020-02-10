@@ -105,23 +105,31 @@ int main (int argc, char* argv[]) {
     ::Typeforge::ToolConfig::filename = args["typeforge-out"].as<string>();
   }
 
-  // Build ROSE IR and use it to initialize Typeforge
-
+  // Build ROSE AST and use it to initialize Typeforge
   ::Typeforge::typechain.initialize(frontend(rose_args));
 
-  // [ALTERNATIVE] "--typechain-graphviz"
-  if (args.isUserProvided("typechain-graphviz")) {
-    ::Typeforge::typechain.toDot("typechain.dot", nullptr);
-    ::Typeforge::typechain.toDot("typechain_double.dot", SageBuilder::buildDoubleType());
+  if (args.isUserProvided("typechain-detailed-dot")) {
+    // graph can also be generated for specific types, e.g. 2nd argument = SageBuilder::buildDoubleType()
+    ::Typeforge::typechain.toDot(args.getString("typechain-detailed-dot"), nullptr,true);
+  }
+
+  if (args.isUserProvided("typechain-compact-dot")) {
+    // graph can also be generated for specific types, e.g. 2nd argument = SageBuilder::buildDoubleType()
+    ::Typeforge::typechain.toDot(args.getString("typechain-compact-dot"), nullptr,false);
+  }
+
+  // exit if no option is provided that requires executing the plugin
+  if(!args.isUserProvided("typeforge-out")
+     && !args.isUserProvided("compile")
+     && !(args.isUserProvided("cast-stats")||args.isUserProvided("stats")||args.isUserProvided("stats-csv")||args.isUserProvided("explicit"))
+     ) {
     return 0;
   }
 
   // Transformation Objects => TODO should be only one
-
   TFTransformation tfTransformation;
 
   // Traces?
-
   if (args.isUserProvided("trace")) {
     ::Typeforge::transformer.setTraceFlag(true);
   }

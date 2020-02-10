@@ -41,21 +41,24 @@ std::vector<std::string> parse_args(int argc, char* argv[]) {
 
   desc.add_options()
     ("help,h", "Produce this help message.")
+    ("help-experimental", "Produce help message for some additional experimental options.")
     ("version,v", "Display the version of Typeforge.")
     ("compile", "Run back end compiler.")
-    ("plugin", po::value<vector<string> >(),"Name of Typeforge plugin files.")
-    ("source-file", po::value<vector<string> >(),"Name of source files.")
-    ("typeforge-out", po::value< string >(),"File to store output inside of JSON.")
+    ("plugin", po::value<vector<string> >(),"Names of Typeforge plugin files (JSON format)")
+    ("source-file", po::value<vector<string> >(),"Names of source files.")
+    ("typeforge-out", po::value< string >(),"Analysis results filename (JSON format).")
+    ("typechain-detailed-dot", po::value< string >(), "Generate a detailed visualizaiton of the typechain graph (GraphViz DOT format).")
+    ("typechain-compact-dot", po::value< string >(), "Generate a compact visualization of the typechain graph (GraphViz DOT format).")
+    ("stats-csv", po::value< string >(),"Generate file with transformation statistics (CSV format).")
+    ("stats", "Print transformation statistics on stdout.")
     ;
 
   extra_desc.add_options()
-    ("spec-file", po::value<vector<string> >(),"Name of Typeforge specification file.")
-    ("csv-stats-file", po::value< string >(),"Generate file [args] with transformation statistics.")
-    ("opnet", "[Experimental] Operand Network will eventually replace TypeChain. Generate GraphViz representations of the OpNet as it get simplified.")
-    ("stats", "Print statistics on performed changes to the program.")
-    ("explicit", "Make all implicit casts explicit.")
-    ("cast-stats", "Print statistics on casts of built-in floating point types.")
-    ("typechain-graphviz", "Generate the Typechain in GraphViz format then quit.")
+    ("spec-file", po::value<vector<string> >(),"[deprecated] Name of Typeforge specification file (use JSON plugin files instead).")
+    ("opnet", "[experimental] Operand Network will eventually replace TypeChain. Generate GraphViz representations of the OpNet as it gets simplified.")
+    ("explicit", "[experimental] Make all implicit casts explicit in generated code.")
+    ("annotate", "[experimental] Add all implicit casts as comments in generated code.")
+    ("cast-stats", "[experimental] Print cast operator statistics of built-in floating point types.")
     ;
 
   hidden_desc.add_options()
@@ -73,6 +76,12 @@ std::vector<std::string> parse_args(int argc, char* argv[]) {
   if (args.count("help")) {
     cout << "typeforge <filename> [OPTIONS]"<<endl;
     cout << desc << "\n";
+    exit(0);
+  }
+
+  if (args.count("help-experimental"))  {
+    cout << "typeforge <filename> [OPTIONS]"<<endl;
+    cout << extra_desc << "\n";
     exit(0);
   }
 

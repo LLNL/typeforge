@@ -8,7 +8,7 @@ SUBDIRS=OpNet
 config_CXXFLAGS= \
   -I$(abs_top_srcdir)/include \
   -g -Wall -O3 -march=native -ftree-vectorize \
-  -rdynamic
+  -rdynamic -Wno-misleading-indentation
 
 lib_LTLIBRARIES= \
   libTypeforge.la \

@@ -1214,7 +1214,7 @@ void Analysis::buildClusters(std::vector<std::set<SgNode *> > & clusters, SgType
   computeClustering(childsets, clusters);
 }
 
-void Analysis::toDot(std::string const & fileName, SgType * base) const {
+void Analysis::toDot(std::string const & fileName, SgType * base, bool detailed) const {
   SgUnparse_Info* uinfo = new SgUnparse_Info();
       uinfo->set_SkipComments();
       uinfo->set_SkipWhitespaces();
@@ -1314,10 +1314,13 @@ void Analysis::toDot(std::string const & fileName, SgType * base) const {
         }
       }
 
-      dotfile << "    n_" << n << " [label=\"" << d->second.handle;
-//      dotfile << "\\n" << d->second.cname;
+      dotfile << "    n_" << n << " [label=\"";
+      if(detailed) {
+        dotfile << d->second.handle;
+        //      dotfile << "\\n" << d->second.cname;
         dotfile << "\\n" << position;
         dotfile << "\\n" << globalUnparseToString(d->second.type, uinfo);
+      }
       dotfile << "\"";
       dotfile << ", fillcolor=" << node_color_map[d->second.cname] << ", style=filled";
       if ( isTypeBasedOn(d->second.type, base, true) ) {

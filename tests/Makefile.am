@@ -7,7 +7,7 @@ TYPEFORGE=../src/typeforge
 
 # Output the TypeChain in GraphViz format
 chktf-typechain: $(TYPEFORGE) $(srcdir)/sample-000.cxx
-	$(TYPEFORGE) --typechain-graphviz $(srcdir)/sample-000.cxx
+	$(TYPEFORGE) --typechain-dot $(srcdir)/sample-000.cxx
 	dot -Tsvg typechain.dot -o typechain.svg
 	dot -Tsvg typechain_double.dot -o typechain_double.svg
 
