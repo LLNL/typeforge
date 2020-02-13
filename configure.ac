@@ -8,6 +8,8 @@ AC_CONFIG_MACRO_DIR([config])
 
 CONFIGURE_ROSE_COMPILER # Must occur before LT_INIT to prevent premature call to AC_PROG_CXX
 
+AC_SUBST(TYPEFORGE_CXXFLAGS, "-Wall -Wno-misleading-indentation -Wunused-variable") # -g -Wall -O3 -march=native -ftree-vectorize -rdynamic
+
 AM_INIT_AUTOMAKE
 LT_INIT
 AC_CONFIG_SRCDIR([src/typeforge.cpp])

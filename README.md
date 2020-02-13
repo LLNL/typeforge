@@ -7,17 +7,17 @@ Typeforge is a tool for type refactoring of C/C++ programs. It enables users to 
 
 Typeforge uses [ROSE Compiler](http://rosecompiler.org/).
 The following instructions assume that [ROSE is installed](https://github.com/rose-compiler/rose/wiki/How-to-Set-Up-ROSE) and the `rose-config` tool is on your path.
+You might also need to install autoconf and libtool (for Ubuntu: `sudo apt install autoconf libtool`).
 
 You can then follow these instructions to install Typeforge:
 ```
 git clone https://github.com/LLNL/typeforge.git
 cd typeforge
 ./build
-mkdir build_tree
-cd build_tree
-../configure
-make -j8
+./configure
+make -j
 sudo make install
+typeforge --version
 ```
 If you do not have administrative priviledge, add `--prefix=/path/to/install/typeforge` to the `configure` command.
 

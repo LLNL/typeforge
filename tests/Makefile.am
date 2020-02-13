@@ -7,9 +7,10 @@ TYPEFORGE=../src/typeforge
 
 # Output the TypeChain in GraphViz format
 chktf-typechain: $(TYPEFORGE) $(srcdir)/sample-000.cxx
-	$(TYPEFORGE) --typechain-dot $(srcdir)/sample-000.cxx
-	dot -Tsvg typechain.dot -o typechain.svg
-	dot -Tsvg typechain_double.dot -o typechain_double.svg
+	$(TYPEFORGE) --typechain-detailed-dot typechain.dot $(srcdir)/sample-000.cxx
+	if which dot &> /dev/null; then \
+	  dot -Tsvg typechain.dot -o typechain.svg ; \
+	fi
 
 # ADAPT test
 #  * this test uses all of typeforge actions

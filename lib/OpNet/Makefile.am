@@ -1,20 +1,6 @@
 
-# AM_LDFLAGS = $(ROSE_LIBS) $(LIBS_WITH_RPATH)
-# AM_CPPFLAGS = $(ROSE_INCLUDES)
-# AM_CXXFLAGS= -I$(top_srcdir)/include -g -Wall -O3 -march=native -ftree-vectorize
+lib_LTLIBRARIES=libTypeforge-opnet.la
 
-lib_LTLIBRARIES= \
-  libTypeforge-opnet.la
-
-libTypeforge_opnet_la_SOURCES= \
-  OperandNetwork.cpp \
-  OperandData.cpp \
-  TypeChain.cpp \
-  CollapseRules.cpp \
-  commons.cpp
-
-libTypeforge_opnet_la_CXXFLAGS= \
-  -I$(abs_top_srcdir)/include \
-  -g -Wall -O3 -march=native -ftree-vectorize \
-  -rdynamic -Wno-misleading-indentation -Wunused-variable
-
+libTypeforge_opnet_la_SOURCES=OperandNetwork.cpp OperandData.cpp TypeChain.cpp CollapseRules.cpp commons.cpp
+libTypeforge_opnet_la_CPPFLAGS=-I$(abs_top_srcdir)/include $(ROSE_CPPFLAGS)
+libTypeforge_opnet_la_CXXFLAGS=$(ROSE_CXXFLAGS) $(TYPEFORGE_CXXFLAGS)

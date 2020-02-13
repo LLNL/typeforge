@@ -1,9 +1,6 @@
 
 bin_PROGRAMS = typeforge
 
-# AM_LDFLAGS = $(ROSE_LIBS) $(LIBS_WITH_RPATH)
-# AM_CPPFLAGS = $(ROSE_INCLUDES)
-
 TF_LIB=$(abs_top_builddir)/lib/libTypeforge.la
 $(TF_LIB):
 	$(MAKE) -C $(abs_top_builddir)/lib libTypeforge.la
@@ -25,17 +22,10 @@ $(TF_OPNET_LIB):
 	$(MAKE) -C $(abs_top_builddir)/lib/OpNet libTypeforge-opnet.la
 
 typeforge_SOURCES=typeforge.cpp CommandLineOptions.cpp
-
-typeforge_LDADD= \
-  $(TF_LIB) \
-  $(TF_OPNET_LIB) \
-  $(TF_TRANSFORM_LIB) \
-  $(TF_CAST_LIB) \
-  $(TF_UTILS_LIB)
-typeforge_CXXFLAGS= \
-  -I$(abs_top_srcdir)/include \
-  -g -Wall -O3 -march=native -ftree-vectorize \
-  -rdynamic -Wno-misleading-indentation
+typeforge_LDADD=$(TF_LIB) $(TF_OPNET_LIB) $(TF_TRANSFORM_LIB) $(TF_CAST_LIB) $(TF_UTILS_LIB)
+typeforge_LDFLAGS=$(ROSE_LDFLAGS) -Wl,-rpath,$(prefix)/lib
+typeforge_CPPFLAGS=$(ROSE_CPPFLAGS) -I$(abs_top_srcdir)/include
+typeforge_CXXFLAGS=$(ROSE_CXXFLAGS) $(TYPEFORGE_CXXFLAGS)
 
 chktf-version: typeforge
 	./typeforge --version
