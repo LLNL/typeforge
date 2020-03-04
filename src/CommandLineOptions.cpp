@@ -86,7 +86,7 @@ std::vector<std::string> parse_args(int argc, char* argv[]) {
   }
 
   if (args.isUserProvided("version")) {
-    cout << "typeforge version 1.0.0" << endl;
+    cout << "typeforge version 1.0.1" << endl;
     cout << "Authors: Markus Schordan, Tristan Vanderbruggen, and Nathan Pinnow." << endl;
     exit(0);
   }

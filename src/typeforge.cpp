@@ -44,159 +44,189 @@ using namespace std;
 using namespace Typeforge;
 
 int main (int argc, char* argv[]) {
-  ROSE_INITIALIZE;
-  Rose::global_options.set_frontend_notes(false);
-  Rose::global_options.set_frontend_warnings(false);
-  Rose::global_options.set_backend_warnings(false);
+  try {
+    ROSE_INITIALIZE;
+    Rose::global_options.set_frontend_notes(false);
+    Rose::global_options.set_frontend_warnings(false);
+    Rose::global_options.set_backend_warnings(false);
 
-  auto rose_args = ::Typeforge::parse_args(argc, argv);
-  rose_args.insert(rose_args.begin(), "rose");
-  if (!args.count("compile")) {
-    rose_args.push_back("-rose:skipfinalCompileStep");
-  }
-
-  // [ALTERNATIVE] "--opnet"
-
-  if (args.isUserProvided("opnet")) {
-    ::Typeforge::opnet.initialize(frontend(rose_args));
-    ::Typeforge::opnet.toDot("opnet-0.dot");
-
-    ::Typeforge::opnet.collapse<::Typeforge::CollapseRules::AssignOperator>();
-    ::Typeforge::opnet.toDot("opnet-1.dot");
-
-    ::Typeforge::opnet.collapse<::Typeforge::CollapseRules::MemberAccess>();
-    ::Typeforge::opnet.toDot("opnet-2.dot");
-
-    ::Typeforge::opnet.collapse<::Typeforge::CollapseRules::ArrayAccess>();
-    ::Typeforge::opnet.toDot("opnet-3.dot");
-
-    ::Typeforge::opnet.collapse<::Typeforge::CollapseRules::Dereference>();
-    ::Typeforge::opnet.toDot("opnet-4.dot");
-
-    ::Typeforge::opnet.collapse<::Typeforge::CollapseRules::AddressOf>();
-    ::Typeforge::opnet.toDot("opnet-5.dot");
-
-    ::Typeforge::opnet.collapse<::Typeforge::CollapseRules::VarRef>();
-    ::Typeforge::opnet.toDot("opnet-6.dot");
-
-    ::Typeforge::opnet.collapse<::Typeforge::CollapseRules::FRef>();
-    ::Typeforge::opnet.toDot("opnet-7.dot");
-
-    ::Typeforge::opnet.collapse<::Typeforge::CollapseRules::ThisRef>();
-    ::Typeforge::opnet.toDot("opnet-8.dot");
-
-    ::Typeforge::opnet.collapse<::Typeforge::CollapseRules::Call>();
-    ::Typeforge::opnet.toDot("opnet-9.dot");
-
-    return 0;
-  }
-
-  // [ALTERNATIVE] "--cast-stats":
-  //     display statistics about casts operations in the program
-  //     TODO This should be a simple query to the model.
-
-  if(args.isUserProvided("cast-stats")) {
-    CastStats castStats;
-    castStats.computeStats(frontend(rose_args));
-    cout << castStats.toString();
-    return 0;
-  }
-
-  if (args.isUserProvided("typeforge-out")) {
-    ::Typeforge::ToolConfig::filename = args["typeforge-out"].as<string>();
-  }
-
-  // Build ROSE AST and use it to initialize Typeforge
-  ::Typeforge::typechain.initialize(frontend(rose_args));
-
-  if (args.isUserProvided("typechain-detailed-dot")) {
-    // graph can also be generated for specific types, e.g. 2nd argument = SageBuilder::buildDoubleType()
-    ::Typeforge::typechain.toDot(args.getString("typechain-detailed-dot"), nullptr,true);
-  }
-
-  if (args.isUserProvided("typechain-compact-dot")) {
-    // graph can also be generated for specific types, e.g. 2nd argument = SageBuilder::buildDoubleType()
-    ::Typeforge::typechain.toDot(args.getString("typechain-compact-dot"), nullptr,false);
-  }
-
-  // exit if no option is provided that requires executing the plugin
-  if(!args.isUserProvided("typeforge-out")
-     && !args.isUserProvided("compile")
-     && !(args.isUserProvided("cast-stats")||args.isUserProvided("stats")||args.isUserProvided("stats-csv")||args.isUserProvided("explicit"))
-     ) {
-    return 0;
-  }
-
-  // Transformation Objects => TODO should be only one
-  TFTransformation tfTransformation;
-
-  // Traces?
-  if (args.isUserProvided("trace")) {
-    ::Typeforge::transformer.setTraceFlag(true);
-  }
-  tfTransformation.trace = ::Typeforge::transformer.getTraceFlag();
-
-  // Three cases:
-  //   "--explicit": makes implicit cast explicit
-  //   "--annotate": adds comments in the generated file
-  //   commands from file(s) TODO all commands should execute from the command list: 1st & 2nd cases should simply add commands to the list
-
-  if (args.isUserProvided("explicit")) {
-    ::Typeforge::makeAllCastsExplicit();
-    std::cout << "Converted all implicit casts to explicit casts." << std::endl;
-
-  } else if (args.isUserProvided("annotate")) {
-    ::Typeforge::annotateImplicitCastsAsComments();
-    std::cout << "Annotated program with comments." << std::endl;
-
-  } else {
-
-    // Read commands
-
-    CommandList commandList;
-    if (args.isUserProvided("plugin")) {
-      ::Typeforge::SpecFrontEnd::parse(args["plugin"].as< std::vector< std::string > >(), commandList);
+    string turnOffRoseWarnings=string("Rose(none,>=error),Rose::EditDistance(none,>=error),Rose::FixupAstDeclarationScope(none,>=error),")
+      +"Rose::FixupAstSymbolTablesToSupportAliasedSymbols(none,>=error),"
+      +"Rose::EditDistance(none,>=error),"
+      +"Rose::TestChildPointersInMemoryPool(none,>=error),Rose::UnparseLanguageIndependentConstructs(none,>=error),"
+      +"rose_ir_node(none,>=error)";
+    string result=Rose::Diagnostics::mfacilities.control(turnOffRoseWarnings); 
+    if(result!="") {
+      cerr<<result<<endl;
+      cerr<<"Error in logger initialization."<<endl;
+      exit(1);
     }
-    if (args.isUserProvided("spec-file")) {
-      ::Typeforge::SpecFrontEnd::parse(args["spec-file"].as< std::vector< std::string > >(), commandList);
+    auto rose_args = ::Typeforge::parse_args(argc, argv);
+    rose_args.insert(rose_args.begin(), "rose");
+    if (!args.count("compile")) {
+      rose_args.push_back("-rose:skipfinalCompileStep");
     }
 
-    // Run
+    // [ALTERNATIVE] "--opnet"
 
-    commandList.runCommands(tfTransformation);
+    if (args.isUserProvided("opnet")) {
+      ::Typeforge::opnet.initialize(frontend(rose_args));
+      ::Typeforge::opnet.toDot("opnet-0.dot");
 
-    // Read in the JSON file used to store "defered" actions ("list_*" queries)
-    //   FIXME race-condition: parallel make with "CC=typeforge --typeforge-out xxx.json"
+      ::Typeforge::opnet.collapse<::Typeforge::CollapseRules::AssignOperator>();
+      ::Typeforge::opnet.toDot("opnet-1.dot");
 
-    // Analyze Phase
+      ::Typeforge::opnet.collapse<::Typeforge::CollapseRules::MemberAccess>();
+      ::Typeforge::opnet.toDot("opnet-2.dot");
 
-//  ::Typeforge::transformer.analyze(commandList);
-    tfTransformation.transformationAnalyze();
+      ::Typeforge::opnet.collapse<::Typeforge::CollapseRules::ArrayAccess>();
+      ::Typeforge::opnet.toDot("opnet-3.dot");
 
-    // Execution Phase
+      ::Typeforge::opnet.collapse<::Typeforge::CollapseRules::Dereference>();
+      ::Typeforge::opnet.toDot("opnet-4.dot");
 
-    ::Typeforge::transformer.execute();
-    tfTransformation.transformationExecution();
+      ::Typeforge::opnet.collapse<::Typeforge::CollapseRules::AddressOf>();
+      ::Typeforge::opnet.toDot("opnet-5.dot");
 
-    // Overwrite the JSON file used to store "defered" actions (cumulate previous one)
-    //   FIXME race-condition: parallel make (see above)
+      ::Typeforge::opnet.collapse<::Typeforge::CollapseRules::VarRef>();
+      ::Typeforge::opnet.toDot("opnet-6.dot");
+
+      ::Typeforge::opnet.collapse<::Typeforge::CollapseRules::FRef>();
+      ::Typeforge::opnet.toDot("opnet-7.dot");
+
+      ::Typeforge::opnet.collapse<::Typeforge::CollapseRules::ThisRef>();
+      ::Typeforge::opnet.toDot("opnet-8.dot");
+
+      ::Typeforge::opnet.collapse<::Typeforge::CollapseRules::Call>();
+      ::Typeforge::opnet.toDot("opnet-9.dot");
+
+      return 0;
+    }
+
+    // [ALTERNATIVE] "--cast-stats":
+    //     display statistics about casts operations in the program
+    //     TODO This should be a simple query to the model.
+
+    if(args.isUserProvided("cast-stats")) {
+      CastStats castStats;
+      castStats.computeStats(frontend(rose_args));
+      cout << castStats.toString();
+      return 0;
+    }
 
     if (args.isUserProvided("typeforge-out")) {
-      ::Typeforge::ToolConfig::appendAnalysis(SageBuilder::buildDoubleType());
-      ::Typeforge::ToolConfig::writeGlobal();
+      ::Typeforge::ToolConfig::filename = args["typeforge-out"].as<string>();
     }
 
-    // Output Phase
+    // Build ROSE AST and use it to initialize Typeforge
+    ::Typeforge::typechain.initialize(frontend(rose_args));
 
-    if (args.isUserProvided("csv-stats-file")) {
-      string csvFileName=args.getString("csv-stats-file");
-      ::Typeforge::TFTypeTransformer::generateCsvTransformationStats(csvFileName, 0 /* FIXME typeforgeSpecFrontEnd.getNumTypeReplace() => SpecFrontEnd::numTypeReplace was never incremented*/, ::Typeforge::transformer, tfTransformation);
+    if (args.isUserProvided("typechain-detailed-dot")) {
+      // graph can also be generated for specific types, e.g. 2nd argument = SageBuilder::buildDoubleType()
+      ::Typeforge::typechain.toDot(args.getString("typechain-detailed-dot"), nullptr,true);
     }
 
-    if (args.isUserProvided("stats")) {
-      ::Typeforge::TFTypeTransformer::printTransformationStats(0 /* FIXME see above */, ::Typeforge::transformer, tfTransformation);
+    if (args.isUserProvided("typechain-compact-dot")) {
+      // graph can also be generated for specific types, e.g. 2nd argument = SageBuilder::buildDoubleType()
+      ::Typeforge::typechain.toDot(args.getString("typechain-compact-dot"), nullptr,false);
     }
+
+    // exit if no option is provided that requires executing the plugin
+    if(!(args.isUserProvided("typeforge-out")
+         ||args.isUserProvided("plugin")
+         ||args.isUserProvided("compile")
+         ||args.isUserProvided("cast-stats")
+         ||args.isUserProvided("stats")
+         ||args.isUserProvided("stats-csv")
+         ||args.isUserProvided("explicit"))
+       ) {
+      cout<<"Not generating any output."<<endl;
+      return 0;
+    }
+
+    // Transformation Objects => TODO should be only one
+    TFTransformation tfTransformation;
+
+    // Traces?
+    if (args.isUserProvided("trace")) {
+      ::Typeforge::transformer.setTraceFlag(true);
+    }
+    tfTransformation.trace = ::Typeforge::transformer.getTraceFlag();
+
+    // Three cases:
+    //   "--explicit": makes implicit cast explicit
+    //   "--annotate": adds comments in the generated file
+    //   commands from file(s) TODO all commands should execute from the command list: 1st & 2nd cases should simply add commands to the list
+
+    if (args.isUserProvided("explicit")) {
+      ::Typeforge::makeAllCastsExplicit();
+      std::cout << "Converted all implicit casts to explicit casts." << std::endl;
+
+    } else if (args.isUserProvided("annotate")) {
+      ::Typeforge::annotateImplicitCastsAsComments();
+      std::cout << "Annotated program with comments." << std::endl;
+
+    } else {
+
+      // Read commands
+
+      CommandList commandList;
+      if (args.isUserProvided("plugin")) {
+        ::Typeforge::SpecFrontEnd::parse(args["plugin"].as< std::vector< std::string > >(), commandList);
+      }
+      // deprecated
+      if (args.isUserProvided("spec-file")) {
+        ::Typeforge::SpecFrontEnd::parse(args["spec-file"].as< std::vector< std::string > >(), commandList);
+      }
+
+      // Run
+
+      commandList.runCommands(tfTransformation);
+
+      // Read in the JSON file used to store "defered" actions ("list_*" queries)
+      //   FIXME race-condition: parallel make with "CC=typeforge --typeforge-out xxx.json"
+
+      // Analyze Phase
+
+      //  ::Typeforge::transformer.analyze(commandList);
+      tfTransformation.transformationAnalyze();
+
+      // Execution Phase
+
+      ::Typeforge::transformer.execute();
+      tfTransformation.transformationExecution();
+
+      // Overwrite the JSON file used to store "defered" actions (cumulate previous one)
+      //   FIXME race-condition: parallel make (see above)
+
+      if (args.isUserProvided("typeforge-out")) {
+        ::Typeforge::ToolConfig::appendAnalysis(SageBuilder::buildDoubleType());
+        ::Typeforge::ToolConfig::writeGlobal();
+      }
+
+      // Output Phase
+
+      if (args.isUserProvided("csv-stats-file")) {
+        string csvFileName=args.getString("csv-stats-file");
+        ::Typeforge::TFTypeTransformer::generateCsvTransformationStats(csvFileName, 0 /* FIXME typeforgeSpecFrontEnd.getNumTypeReplace() => SpecFrontEnd::numTypeReplace was never incremented*/, ::Typeforge::transformer, tfTransformation);
+      }
+
+      if (args.isUserProvided("stats")) {
+        ::Typeforge::TFTypeTransformer::printTransformationStats(0 /* FIXME see above */, ::Typeforge::transformer, tfTransformation);
+      }
+    }
+    cout<<"Calling backend."<<endl;
+    int res=backend(::Typeforge::project);
+    Rose::Diagnostics::mfacilities.shutdown();
+    return res;
+  } catch(const std::exception& e) {
+    cerr<< "Error (std::exception): " << e.what() << endl;
+    return 1;
+  } catch(char const* str) {
+    cerr<< "Error: (char const* exception): " << str << endl;
+    return 1;
+  } catch(...) {
+    cerr<< "Unknown exception raised." << endl;
+    return 1;
   }
-
-  return backend(::Typeforge::project);
 }
