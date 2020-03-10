@@ -4,7 +4,7 @@ all: typeforge.pdf
 typeforge.pdf: typeforge.tex typeforge.bib
 	@if which pdflatex &> /dev/null; then \
 	  pdflatex typeforge.tex ; \
-	  bibtex typeforge.tex ; \
+	  bibtex typeforge ; \
 	  pdflatex typeforge.tex ; \
 	  pdflatex typeforge.tex ; \
 	else \
