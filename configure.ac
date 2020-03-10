@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT(typeforge, 1.0.0, vanderbrugge1@llnl.gov)
+AC_INIT(typeforge, 1.0.1, vanderbrugge1@llnl.gov)
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_MACRO_DIR([config])
 
