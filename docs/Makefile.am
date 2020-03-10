@@ -12,5 +12,5 @@ typeforge.pdf: typeforge.tex typeforge.bib
 	fi
 
 clean:
-	rm -f typeforge.aux typeforge.log typeforge.toc typeforge.pdf
+	rm -f typeforge.aux typeforge.bbl typeforge.blg typeforge.log typeforge.toc typeforge.pdf
 

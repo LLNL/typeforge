@@ -242,17 +242,8 @@ bool SpecFrontEnd::readTFFile(string const & specFileName, CommandList & command
       functionName=splitLine[1];
       
       if(commandName== CHANGE_VAR_TYPE || commandName== CHANGE_VAR_BASE) {
-	varName=splitLine[2];
-	if(numEntries==4) {
-	  typeName=splitLine[3];
-	} else {
-	  typeName="float";
-	}
-        bool transformBase = false;
-        if(commandName == CHANGE_VAR_BASE){
-          transformBase = true;
-        }
-        assert(false); // commandList.addVarTypeCommand(varName, functionName, typeName, transformBase, false);
+        cerr<<"Error: change_var_type and change_var_base is obsolete. Use change_base_type instead."<<endl;
+        exit(1);
       } else if(commandName == CHANGE_EVERY_TYPE || commandName== CHANGE_EVERY_BASE) {
 	if(numEntries!=3) {
 	  cerr<<"Error: wrong number of arguments in line "<<lineNr<<"."<<endl;

@@ -734,7 +734,9 @@ static bool incompatible_types(SgNode * k, SgNode * t) {
           SgType::STRIP_ARRAY_TYPE    |
           SgType::STRIP_POINTER_TYPE;
 
+#if DEBUG__incompatible_types
   SgType * v_kt = kt->stripType(strip_to_value_or_pointer);
+#endif
   SgType * b_kt = kt->stripType(strip_to_base);
   SgType * v_tt = tt->stripType(strip_to_value_or_pointer);
   SgType * b_tt = tt->stripType(strip_to_base);
@@ -747,8 +749,10 @@ static bool incompatible_types(SgNode * k, SgNode * t) {
 #endif
 
   bool kt_is_vt  = (kt->stripType(SgType::STRIP_MODIFIER_TYPE) == b_kt);
+#if DEBUG__incompatible_types
   bool kt_no_ptr = (v_kt == b_kt);
   bool tt_is_vt  = (tt->stripType(SgType::STRIP_MODIFIER_TYPE) == b_tt);
+#endif
   bool tt_no_ptr = (v_tt == b_tt);
 
 #if DEBUG__incompatible_types
